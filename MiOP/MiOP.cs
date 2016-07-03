@@ -12,14 +12,20 @@ namespace MiOP
 	public class MiOP : Plugin
 	{
 		private static ILog Log = LogManager.GetLogger(typeof(MiOP));
-		private List<string> ops = new List<string>();
+		private List<string> OP = new List<string>();
 		private Manager manager;
 
 		private Dictionary<string, string> helpText = new Dictionary<string, string>
 		{
+<<<<<<< HEAD
 			{ "add", $"{ChatColors.Yellow}/op add [ name ] - op 추가" },
 			{ "rm", $"{ChatColors.Yellow}/op rm [ name ] - op삭제" },
 			{ "list", $"{ChatColors.Yellow}/op list - op 전체 목록 조회" }
+=======
+			{ "add", $"{ChatColors.Yellow}/op add [ name ] - OP 추가" },
+			{ "rm", $"{ChatColors.Yellow}/op rm [ name ] - OP삭제" },
+			{ "list", $"{ChatColors.Yellow}/op list - OP 전체 목록 조회" }
+>>>>>>> parent of 669eade... Change names
 		};
 
 		protected override void OnEnable()
@@ -50,11 +56,15 @@ namespace MiOP
 
 			if(args == "list")
 			{
+<<<<<<< HEAD
 				OP ops = manager.GetList();
 				foreach(var item in ops.ops)
 				{
 					Utility.SendMsg(player, item);
 				}
+=======
+				MakeupList(manager.GetList()).ForEach(x => Utility.SendMsg(player, x));
+>>>>>>> parent of 669eade... Change names
 			}
 			else
 			{
@@ -104,11 +114,15 @@ namespace MiOP
 					msg = "추가에 실패하였습니다. ";
 					if(manager.IsOP(args2))
 					{
+<<<<<<< HEAD
 						msg += $"{args2}님은 이미 op입니다.";
 					}
 					else if(manager.IsAdmin(args2))
 					{
 						msg += $"{args2}님은 이미 admin입니다.";
+=======
+						msg = $"추가에 실패하였습니다. {args2}님은 이미 OP입니다.";
+>>>>>>> parent of 669eade... Change names
 					}
 					else
 					{
@@ -134,7 +148,11 @@ namespace MiOP
 					msg = "추가에 실패하였습니다. ";
 					if(!manager.IsOP(args2))
 					{
+<<<<<<< HEAD
 						msg += $"{args2}님은 op가 아닙니다.";
+=======
+						msg = $"추가에 실패하였습니다. {args2}님은 OP가 아닙니다.";
+>>>>>>> parent of 669eade... Change names
 					}
 					else
 					{
@@ -179,8 +197,12 @@ namespace MiOP
 				}
 				i++;
 			}
+<<<<<<< HEAD
 			makeupText.Add(sb.ToString());
 			makeupText.Add($"총 {list.Count}명의 op와 admin이 있습니다.");
+=======
+			makeupText.Add($"총 {list.Count}명의 OP가 있습니다.");
+>>>>>>> parent of 669eade... Change names
 
 			return makeupText;
 		}

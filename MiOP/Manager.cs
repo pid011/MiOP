@@ -15,19 +15,24 @@ namespace MiOP
 			public List<string> admins { get; internal set; }
 		}
 	/// <summary>
-	/// 여러가지 op기능을 제공합니다.
+	/// 여러가지 OP기능을 제공합니다.
 	/// </summary>
 	public class Manager : OP
 	{
+<<<<<<< HEAD
 
 		private ILog Log = LogManager.GetLogger("op Manager");
 		private const string fileName = "ops.txt";
+=======
+		private ILog Log = LogManager.GetLogger("OP Manager");
+		private const string fileName = "OP.txt";
+>>>>>>> parent of 669eade... Change names
 		private static string assembly = Assembly.GetExecutingAssembly().GetName().CodeBase;
 		private static string path = Path.Combine(new Uri(Path.GetDirectoryName(assembly)).LocalPath, fileName);
 		
 
 		/// <summary>
-		/// op 인스턴스를 초기화합니다.
+		/// OP 인스턴스를 초기화합니다.
 		/// </summary>
 		public Manager()
 		{
@@ -38,7 +43,7 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// op를 추가하고 성공여부를 반환합니다.
+		/// OP를 추가하고 성공여부를 반환합니다.
 		/// </summary>
 		/// <param name="name">Player's name</param>
 		public bool Add(string name)
@@ -66,7 +71,7 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// op를 제거하고 성공여부를 반환합니다.
+		/// OP를 제거하고 성공여부를 반환합니다.
 		/// </summary>
 		/// <param name="name">Player's name</param>
 		/// <returns></returns>
@@ -92,7 +97,7 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// op 목록을 가져옵니다.
+		/// OP 목록을 가져옵니다.
 		/// </summary>
 		/// <returns></returns>
 		public OP GetList()
@@ -130,7 +135,7 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// 해당 플레이어가 op인지 확인합니다.
+		/// 해당 플레이어가 OP인지 확인합니다.
 		/// </summary>
 		/// <param name="name">플레이어의 이름</param>
 		/// <returns></returns>
@@ -144,7 +149,7 @@ namespace MiOP
 		public bool IsAdmin(string name) => admins.Contains(name);
 
 		/// <summary>
-		/// 매개변수로 받은 플레이어의 퍼미션을 확인하고 op면 true,
+		/// 매개변수로 받은 플레이어의 퍼미션을 확인하고 OP면 true,
 		/// 아니면 false를 반환하고 메시지를 보냅니다.
 		/// </summary>
 		/// <param name="player">플레이어의 인스턴스</param>
