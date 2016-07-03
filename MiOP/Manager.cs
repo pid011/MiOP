@@ -162,7 +162,7 @@ namespace MiOP
 			}
 			else
 			{
-				player.SendMessage($"{ChatColors.Red}명령어를 사용할 권한이 없습니다 !");
+				Utility.SendMsg(player, $"{ChatColors.Red}명령어를 사용할 권한이 없습니다 !");
 			}
 			return false;
 		}
