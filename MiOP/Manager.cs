@@ -10,17 +10,17 @@ using MiNET.Utils;
 namespace MiOP
 {
 	/// <summary>
-	/// 여러가지 OP기능을 제공합니다.
+	/// 여러가지 op기능을 제공합니다.
 	/// </summary>
 	public class Manager
 	{
-		private ILog Log = LogManager.GetLogger("OP Manager");
-		private const string fileName = "OP.txt";
+		private ILog Log = LogManager.GetLogger("op Manager");
+		private const string fileName = "op.txt";
 		private static string assembly = Assembly.GetExecutingAssembly().GetName().CodeBase;
 		private static string path = Path.Combine(new Uri(Path.GetDirectoryName(assembly)).LocalPath, fileName);
 
 		/// <summary>
-		/// OP 인스턴스를 초기화합니다.
+		/// op 인스턴스를 초기화합니다.
 		/// </summary>
 		public Manager()
 		{
@@ -31,7 +31,7 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// OP를 추가하고 성공여부를 반환합니다.
+		/// op를 추가하고 성공여부를 반환합니다.
 		/// </summary>
 		/// <param name="name">Player's name</param>
 		public bool Add(string name)
@@ -55,7 +55,7 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// OP를 제거하고 성공여부를 반환합니다.
+		/// op를 제거하고 성공여부를 반환합니다.
 		/// </summary>
 		/// <param name="name">Player's name</param>
 		/// <returns></returns>
@@ -82,7 +82,7 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// OP 목록을 가져옵니다.
+		/// op 목록을 가져옵니다.
 		/// </summary>
 		/// <returns></returns>
 		public List<string> GetList()
@@ -110,14 +110,14 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// 해당 플레이어가 OP인지 확인합니다.
+		/// 해당 플레이어가 op인지 확인합니다.
 		/// </summary>
 		/// <param name="name">Player's name</param>
 		/// <returns></returns>
 		public bool IsOP(string name) => GetList().Contains(name);
 
 		/// <summary>
-		/// 매개변수로 받은 플레이어의 퍼미션을 확인하고 OP면 true,
+		/// 매개변수로 받은 플레이어의 퍼미션을 확인하고 op면 true,
 		/// 아니면 false를 반환하고 메시지를 보냅니다.
 		/// </summary>
 		/// <param name="sender">Instance of player</param>
