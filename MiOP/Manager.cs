@@ -46,7 +46,7 @@ namespace MiOP
 			}
 			else
 			{
-				StreamWriter stream = new StreamWriter(path, true, Encoding.Unicode);
+				StreamWriter stream = new StreamWriter(path, true, Encoding.UTF8);
 				stream.WriteLine(name);
 
 				stream.Close();
@@ -74,7 +74,7 @@ namespace MiOP
 				sb.AppendLine(item);
 			}
 
-			StreamWriter stream = new StreamWriter(path, false, Encoding.Unicode);
+			StreamWriter stream = new StreamWriter(path, false, Encoding.UTF8);
 			stream.Write(sb.ToString());
 
 			stream.Close();
@@ -90,7 +90,7 @@ namespace MiOP
 			List<string> list = new List<string>();
 			if(File.Exists(path))
 			{
-				StreamReader stream = new StreamReader(path, Encoding.Unicode);
+				StreamReader stream = new StreamReader(path, Encoding.UTF8);
 				int counter = 0;
 				string line;
 				while((line = stream.ReadLine()) != null)
