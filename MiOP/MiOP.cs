@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 using log4net;
 using MiNET;
 using MiNET.Plugins;
@@ -12,21 +14,15 @@ namespace MiOP
 	public class MiOP : Plugin
 	{
 		private static ILog Log = LogManager.GetLogger(typeof(MiOP));
-		private List<string> OP = new List<string>();
+		private List<string> ops = new List<string>();
 		private Manager manager;
-
-		private Dictionary<string, string> helpText = new Dictionary<string, string>
+		Dictionary<string, string> helpText = new Dictionary<string, string>
 		{
-<<<<<<< HEAD
-			{ "add", $"{ChatColors.Yellow}/op add [ name ] - op 추가" },
+			{ "add", $"{ChatColors.Yellow}/op add [ name ] - OP 추가" },
 			{ "rm", $"{ChatColors.Yellow}/op rm [ name ] - op삭제" },
 			{ "list", $"{ChatColors.Yellow}/op list - op 전체 목록 조회" }
-=======
-			{ "add", $"{ChatColors.Yellow}/op add [ name ] - OP 추가" },
-			{ "rm", $"{ChatColors.Yellow}/op rm [ name ] - OP삭제" },
-			{ "list", $"{ChatColors.Yellow}/op list - OP 전체 목록 조회" }
->>>>>>> parent of 669eade... Change names
 		};
+		enum commands { add, rm, list }
 
 		protected override void OnEnable()
 		{
@@ -38,72 +34,60 @@ namespace MiOP
 		{
 			manager = new Manager();
 		}
-
 		[Command]
 		public void op(Player player)
 		{
-			if(!manager.CheckCurrentUserPermission(player)) return;
-
-			Utility.SendMsg(player, helpText["add"]);
-			Utility.SendMsg(player, helpText["rm"]);
-			Utility.SendMsg(player, helpText["list"]);
+			Utility.SendMsg(player, helpText[commands.add.ToString()]);
+			Utility.SendMsg(player, helpText[commands.rm.ToString()]);
+			Utility.SendMsg(player, helpText[commands.list.ToString()]);
 		}
 
 		[Command]
 		public void op(Player player, string args)
 		{
-			if(!manager.CheckCurrentUserPermission(player)) return;
-
-			if(args == "list")
+			if(args == commands.list.ToString())
 			{
-<<<<<<< HEAD
-				OP ops = manager.GetList();
-				foreach(var item in ops.ops)
+				List<string> msgs = MakeupList(manager.GetList());
+				foreach(var item in msgs)
 				{
 					Utility.SendMsg(player, item);
 				}
-=======
-				MakeupList(manager.GetList()).ForEach(x => Utility.SendMsg(player, x));
->>>>>>> parent of 669eade... Change names
 			}
 			else
 			{
 				char[] texts = args.ToCharArray();
 				foreach(var t in texts)
 				{
-					if("add".Contains(t.ToString()))
+					if(commands.add.ToString().Contains(t.ToString()))
 					{
-						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["add"]}");
+						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText[commands.add.ToString()]}");
 						break;
 					}
-					else if("rm".Contains(t.ToString()))
+					else if(commands.rm.ToString().Contains(t.ToString()))
 					{
-						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["rm"]}");
+						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText[commands.rm.ToString()]}");
 						break;
 					}
-					else if("list".Contains(t.ToString()))
+					else if(commands.list.ToString().Contains(t.ToString()))
 					{
-						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["list"]}");
+						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText[commands.list.ToString()]}");
 						break;
 					}
 					else
 					{
-						Utility.SendMsg(player, helpText["add"]);
-						Utility.SendMsg(player, helpText["rm"]);
-						Utility.SendMsg(player, helpText["list"]);
+						Utility.SendMsg(player, helpText[commands.add.ToString()]);
+						Utility.SendMsg(player, helpText[commands.rm.ToString()]);
+						Utility.SendMsg(player, helpText[commands.list.ToString()]);
 						break;
 					}
 				}
 			}
 		}
-
 		[Command]
 		public void op(Player player, string args1, string args2)
 		{
-			if(!manager.CheckCurrentUserPermission(player)) return;
-
 			string msg;
-			if(args1 == "add")
+			if(args1 == commands.add.ToString())
 			{
 				if(manager.Add(args2))
 				{
@@ -111,61 +95,41 @@ namespace MiOP
 				}
 				else
 				{
-					msg = "추가에 실패하였습니다. ";
 					if(manager.IsOP(args2))
 					{
-<<<<<<< HEAD
-						msg += $"{args2}님은 이미 op입니다.";
-					}
-					else if(manager.IsAdmin(args2))
-					{
-						msg += $"{args2}님은 이미 admin입니다.";
-=======
-						msg = $"추가에 실패하였습니다. {args2}님은 이미 OP입니다.";
->>>>>>> parent of 669eade... Change names
+						msg = $"추가에 실패하였습니다. {args2}님은 이미 op입니다.";
 					}
 					else
 					{
-						msg += $"내부적 오류입니다.";
+						msg = $"추가에 실패하였습니다. 내부적 오류입니다.";
 					}
 				}
 				Utility.SendMsg(player, msg);
 			}
-			else if(args1 == "rm")
+			else if(args1 == commands.rm.ToString())
 			{
-				if(manager.IsAdmin(args2))
-				{
-					Utility.SendMsg(player, $"{args2}님은 이미 admin입니다.");
-					return;
-				}
-
 				if(manager.Remove(args2))
 				{
 					msg = $"{args2}님을 성공적으로 삭제 하였습니다!";
 				}
 				else
 				{
-					msg = "추가에 실패하였습니다. ";
 					if(!manager.IsOP(args2))
 					{
-<<<<<<< HEAD
-						msg += $"{args2}님은 op가 아닙니다.";
-=======
-						msg = $"추가에 실패하였습니다. {args2}님은 OP가 아닙니다.";
->>>>>>> parent of 669eade... Change names
+						msg = $"추가에 실패하였습니다. {args2}님은 op가 아닙니다.";
 					}
 					else
 					{
-						msg += $"내부적 오류입니다.";
+						msg = $"추가에 실패하였습니다. 내부적 오류입니다.";
 					}
 				}
 				Utility.SendMsg(player, msg);
 			}
 			else
 			{
-				Utility.SendMsg(player, helpText["add"]);
-				Utility.SendMsg(player, helpText["rm"]);
-				Utility.SendMsg(player, helpText["list"]);
+				Utility.SendMsg(player, helpText[commands.add.ToString()]);
+				Utility.SendMsg(player, helpText[commands.rm.ToString()]);
+				Utility.SendMsg(player, helpText[commands.list.ToString()]);
 			}
 		}
 
@@ -175,20 +139,11 @@ namespace MiOP
 			StringBuilder sb = new StringBuilder();
 
 			makeupText.Add("=== LIST ===");
-			makeupText.Add($"{ChatColors.Red}RED = admin{ChatColors.White}, {ChatColors.Green}GREEN = op");
 			sb.Append(ChatColors.Gold);
 			int i = 1;
 			foreach(var item in list)
 			{
-				if(manager.IsAdmin(item))
-				{
-					sb.Append($"[{ChatColors.Red}{item}{ChatColors.Gold}] ");
-				}
-				else
-				{
-					sb.Append($"[{ChatColors.Green}{item}{ChatColors.Gold}] ");
-				}
-
+				sb.Append($"[{ChatColors.Green}{item}{ChatColors.Gold}] ");
 				if(i % 5 == 0)
 				{
 					makeupText.Add(sb.ToString());
@@ -197,12 +152,7 @@ namespace MiOP
 				}
 				i++;
 			}
-<<<<<<< HEAD
-			makeupText.Add(sb.ToString());
-			makeupText.Add($"총 {list.Count}명의 op와 admin이 있습니다.");
-=======
-			makeupText.Add($"총 {list.Count}명의 OP가 있습니다.");
->>>>>>> parent of 669eade... Change names
+			makeupText.Add($"총 {list.Count}명의 op가 있습니다.");
 
 			return makeupText;
 		}

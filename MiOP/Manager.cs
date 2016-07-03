@@ -9,30 +9,18 @@ using MiNET.Utils;
 
 namespace MiOP
 {
-		public class OP
-		{
-			public List<string> ops { get; internal set; }
-			public List<string> admins { get; internal set; }
-		}
 	/// <summary>
-	/// 여러가지 OP기능을 제공합니다.
+	/// 여러가지 op기능을 제공합니다.
 	/// </summary>
-	public class Manager : OP
+	public class Manager
 	{
-<<<<<<< HEAD
-
 		private ILog Log = LogManager.GetLogger("op Manager");
-		private const string fileName = "ops.txt";
-=======
-		private ILog Log = LogManager.GetLogger("OP Manager");
-		private const string fileName = "OP.txt";
->>>>>>> parent of 669eade... Change names
+		private const string fileName = "op.txt";
 		private static string assembly = Assembly.GetExecutingAssembly().GetName().CodeBase;
 		private static string path = Path.Combine(new Uri(Path.GetDirectoryName(assembly)).LocalPath, fileName);
-		
 
 		/// <summary>
-		/// OP 인스턴스를 초기화합니다.
+		/// op 인스턴스를 초기화합니다.
 		/// </summary>
 		public Manager()
 		{
@@ -43,7 +31,7 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// OP를 추가하고 성공여부를 반환합니다.
+		/// op를 추가하고 성공여부를 반환합니다.
 		/// </summary>
 		/// <param name="name">Player's name</param>
 		public bool Add(string name)
@@ -56,13 +44,9 @@ namespace MiOP
 			{
 				return false;
 			}
-			else if(IsAdmin(name))
-			{
-				return false;
-			}
 			else
 			{
-				StreamWriter stream = new StreamWriter(path, true, Encoding.UTF8);
+				StreamWriter stream = new StreamWriter(path, true, Encoding.Unicode);
 				stream.WriteLine(name);
 
 				stream.Close();
@@ -71,7 +55,7 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// OP를 제거하고 성공여부를 반환합니다.
+		/// op를 제거하고 성공여부를 반환합니다.
 		/// </summary>
 		/// <param name="name">Player's name</param>
 		/// <returns></returns>
@@ -81,15 +65,16 @@ namespace MiOP
 			{
 				return false;
 			}
-			ops.RemoveAll(x => x == name ? true : false);
+			List<string> list = GetList();
+			list.RemoveAll(x => x == name ? true : false);
 
 			StringBuilder sb = new StringBuilder();
-			foreach(var item in ops)
+			foreach(var item in list)
 			{
 				sb.AppendLine(item);
 			}
 
-			StreamWriter stream = new StreamWriter(path, false, Encoding.UTF8);
+			StreamWriter stream = new StreamWriter(path, false, Encoding.Unicode);
 			stream.Write(sb.ToString());
 
 			stream.Close();
@@ -97,21 +82,23 @@ namespace MiOP
 		}
 
 		/// <summary>
-		/// OP 목록을 가져옵니다.
+		/// op 목록을 가져옵니다.
 		/// </summary>
 		/// <returns></returns>
-		public OP GetList()
+		public List<string> GetList()
 		{
+			List<string> list = new List<string>();
 			if(File.Exists(path))
 			{
-				StreamReader stream = new StreamReader(path, Encoding.UTF8);
+				StreamReader stream = new StreamReader(path, Encoding.Unicode);
 				int counter = 0;
 				string line;
 				while((line = stream.ReadLine()) != null)
 				{
-					ops.Add(line.Replace(" ", string.Empty));
+					list.Add(line);
 					counter++;
 				}
+
 				stream.Close();
 			}
 			else
@@ -119,51 +106,31 @@ namespace MiOP
 				File.Create(path);
 			}
 
-			string txt = Config.GetProperty("admins", string.Empty);
-			if(txt == string.Empty) return this;
-		
-			txt = txt.Replace(" ", string.Empty);
-			if(! txt.Contains(","))
-			{
-				admins.Add(txt);
-			}
-			else
-			{
-				string[] users = txt.Split(',');
-			}
-			return this;
+			return list;
 		}
 
 		/// <summary>
-		/// 해당 플레이어가 OP인지 확인합니다.
+		/// 해당 플레이어가 op인지 확인합니다.
 		/// </summary>
-		/// <param name="name">플레이어의 이름</param>
+		/// <param name="name">Player's name</param>
 		/// <returns></returns>
-		public bool IsOP(string name) => ops.Contains(name);
+		public bool IsOP(string name) => GetList().Contains(name);
 
 		/// <summary>
-		/// 해당 플레이어가 admin인지 확인합니다.
-		/// </summary>
-		/// <param name="name">플레이어의 이름</param>
-		/// <returns></returns>
-		public bool IsAdmin(string name) => admins.Contains(name);
-
-		/// <summary>
-		/// 매개변수로 받은 플레이어의 퍼미션을 확인하고 OP면 true,
+		/// 매개변수로 받은 플레이어의 퍼미션을 확인하고 op면 true,
 		/// 아니면 false를 반환하고 메시지를 보냅니다.
 		/// </summary>
-		/// <param name="player">플레이어의 인스턴스</param>
+		/// <param name="sender">Instance of player</param>
 		/// <returns></returns>
-		public bool CheckCurrentUserPermission(Player player)
+		public bool CheckCurrentUserPermission(Player sender)
 		{
-
-			if(IsOP(player.Username))
+			if(IsOP(sender.Username))
 			{
 				return true;
 			}
 			else
 			{
-				Utility.SendMsg(player, $"{ChatColors.Red}명령어를 사용할 권한이 없습니다 !");
+				sender.SendMessage($"{ChatColors.Red}[Server] 명령어를 사용할 권한이 없습니다 !");
 			}
 			return false;
 		}
