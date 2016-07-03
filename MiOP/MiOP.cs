@@ -37,17 +37,21 @@ namespace MiOP
 		[Command]
 		public void op(Player player)
 		{
-			Utility.SendMsg(player, helpText[commands.add.ToString()]);
-			Utility.SendMsg(player, helpText[commands.rm.ToString()]);
-			Utility.SendMsg(player, helpText[commands.list.ToString()]);
+			if(!manager.CheckCurrentUserPermission(player)) return;
+
+			Utility.SendMsg(player, helpText["add"]);
+			Utility.SendMsg(player, helpText["rm"]);
+			Utility.SendMsg(player, helpText["list"]);
 		}
 
 		[Command]
 		public void op(Player player, string args)
 		{
-			if(args == commands.list.ToString())
+			if(!manager.CheckCurrentUserPermission(player)) return;
+
+			if(args == "list")
 			{
-				List<string> msgs = MakeupList(manager.GetList());
+				List<string> msgs = MakeupList(manager.GetOpList());
 				foreach(var item in msgs)
 				{
 					Utility.SendMsg(player, item);
@@ -58,26 +62,26 @@ namespace MiOP
 				char[] texts = args.ToCharArray();
 				foreach(var t in texts)
 				{
-					if(commands.add.ToString().Contains(t.ToString()))
+					if("add".Contains(t.ToString()))
 					{
-						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText[commands.add.ToString()]}");
+						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["add"]}");
 						break;
 					}
-					else if(commands.rm.ToString().Contains(t.ToString()))
+					else if("rm".Contains(t.ToString()))
 					{
-						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText[commands.rm.ToString()]}");
+						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["rm"]}");
 						break;
 					}
-					else if(commands.list.ToString().Contains(t.ToString()))
+					else if("list".Contains(t.ToString()))
 					{
-						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText[commands.list.ToString()]}");
+						Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["list"]}");
 						break;
 					}
 					else
 					{
-						Utility.SendMsg(player, helpText[commands.add.ToString()]);
-						Utility.SendMsg(player, helpText[commands.rm.ToString()]);
-						Utility.SendMsg(player, helpText[commands.list.ToString()]);
+						Utility.SendMsg(player, helpText["add"]);
+						Utility.SendMsg(player, helpText["rm"]);
+						Utility.SendMsg(player, helpText["list"]);
 						break;
 					}
 				}
@@ -86,8 +90,10 @@ namespace MiOP
 		[Command]
 		public void op(Player player, string args1, string args2)
 		{
+			if(!manager.CheckCurrentUserPermission(player)) return;
+
 			string msg;
-			if(args1 == commands.add.ToString())
+			if(args1 == "add")
 			{
 				if(manager.Add(args2))
 				{
@@ -95,53 +101,79 @@ namespace MiOP
 				}
 				else
 				{
+					msg = "추가에 실패하였습니다. ";
 					if(manager.IsOP(args2))
 					{
-						msg = $"추가에 실패하였습니다. {args2}님은 이미 op입니다.";
+						msg += $"{args2}님은 이미 op입니다.";
+					}
+					else if(manager.IsAdmin(args2))
+					{
+						msg += $"{args2}님은 이미 admin입니다.";
 					}
 					else
 					{
-						msg = $"추가에 실패하였습니다. 내부적 오류입니다.";
+						msg += $"내부적 오류입니다.";
 					}
 				}
 				Utility.SendMsg(player, msg);
 			}
-			else if(args1 == commands.rm.ToString())
+			else if(args1 == "rm")
 			{
+				if(manager.IsAdmin(args2))
+				{
+					Utility.SendMsg(player, $"admin은 삭제가 불가능 합니다.");
+					return;
+				}
 				if(manager.Remove(args2))
 				{
 					msg = $"{args2}님을 성공적으로 삭제 하였습니다!";
 				}
 				else
 				{
+					msg = "삭제에 실패하였습니다. ";
 					if(!manager.IsOP(args2))
 					{
-						msg = $"추가에 실패하였습니다. {args2}님은 op가 아닙니다.";
+						msg += $"{args2}님은 op가 아닙니다.";
 					}
 					else
 					{
-						msg = $"추가에 실패하였습니다. 내부적 오류입니다.";
+						msg += $"내부적 오류입니다.";
 					}
 				}
 				Utility.SendMsg(player, msg);
 			}
 			else
 			{
-				Utility.SendMsg(player, helpText[commands.add.ToString()]);
-				Utility.SendMsg(player, helpText[commands.rm.ToString()]);
-				Utility.SendMsg(player, helpText[commands.list.ToString()]);
+				Utility.SendMsg(player, helpText["add"]);
+				Utility.SendMsg(player, helpText["rm"]);
+				Utility.SendMsg(player, helpText["list"]);
 			}
 		}
 
 		private List<string> MakeupList(List<string> list)
 		{
 			List<string> makeupText = new List<string>();
+			List<string> op = manager.GetOpList();
+			List<string> admin = manager.GetAdminList();
+
 			StringBuilder sb = new StringBuilder();
 
 			makeupText.Add("=== LIST ===");
+			makeupText.Add($"{ChatColors.Red}RED{ChatColors.White} = admin, {ChatColors.Green}GREEN{ChatColors.White} = op");
 			sb.Append(ChatColors.Gold);
 			int i = 1;
-			foreach(var item in list)
+			foreach(var item in admin)
+			{
+				sb.Append($"[{ChatColors.Red}{item}{ChatColors.Gold}] ");
+				if(i % 5 == 0)
+				{
+					makeupText.Add(sb.ToString());
+					sb.Clear();
+					sb.Append(ChatColors.Gold);
+				}
+				i++;
+			}
+			foreach(var item in op)
 			{
 				sb.Append($"[{ChatColors.Green}{item}{ChatColors.Gold}] ");
 				if(i % 5 == 0)
@@ -152,7 +184,8 @@ namespace MiOP
 				}
 				i++;
 			}
-			makeupText.Add($"총 {list.Count}명의 op가 있습니다.");
+			makeupText.Add(sb.ToString());
+			makeupText.Add($"총 {op.Count + admin.Count}명의 admin과 op가 있습니다.");
 
 			return makeupText;
 		}

@@ -15,7 +15,7 @@ namespace MiOP
 	public class Manager
 	{
 		private ILog Log = LogManager.GetLogger("op Manager");
-		private const string fileName = "op.txt";
+		private const string fileName = "ops.txt";
 		private static string assembly = Assembly.GetExecutingAssembly().GetName().CodeBase;
 		private static string path = Path.Combine(new Uri(Path.GetDirectoryName(assembly)).LocalPath, fileName);
 
@@ -40,7 +40,7 @@ namespace MiOP
 			{
 				File.Create(path);
 			}
-			if(IsOP(name))
+			if(IsOP(name) || IsAdmin(name))
 			{
 				return false;
 			}
@@ -65,7 +65,7 @@ namespace MiOP
 			{
 				return false;
 			}
-			List<string> list = GetList();
+			List<string> list = GetOpList();
 			list.RemoveAll(x => x == name ? true : false);
 
 			StringBuilder sb = new StringBuilder();
@@ -85,7 +85,7 @@ namespace MiOP
 		/// op 목록을 가져옵니다.
 		/// </summary>
 		/// <returns></returns>
-		public List<string> GetList()
+		public List<string> GetOpList()
 		{
 			List<string> list = new List<string>();
 			if(File.Exists(path))
@@ -110,27 +110,59 @@ namespace MiOP
 		}
 
 		/// <summary>
+		/// admin목록을 가져옵니다.
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetAdminList()
+		{
+			List<string> list = new List<string>();
+			string txt = Config.GetProperty("admins", string.Empty);
+			if(txt == string.Empty) return list;
+			txt = txt.Replace(" ", string.Empty);
+			if(!txt.Contains(","))
+			{
+				list.Add(txt);
+			}
+			else
+			{
+				string[] users = txt.Split(',');
+				foreach(var item in users)
+				{
+					list.Add(item);
+				}
+			}
+			return list;
+		}
+
+		/// <summary>
 		/// 해당 플레이어가 op인지 확인합니다.
 		/// </summary>
-		/// <param name="name">Player's name</param>
+		/// <param name="name">플레이어의 이름</param>
 		/// <returns></returns>
-		public bool IsOP(string name) => GetList().Contains(name);
+		public bool IsOP(string name) => GetOpList().Contains(name);
+
+		/// <summary>
+		/// 해당 플레이어가 admin인지 확인합니다.
+		/// </summary>
+		/// <param name="name">플레이어의 이름</param>
+		/// <returns></returns>
+		public bool IsAdmin(string name) => GetAdminList().Contains(name);
 
 		/// <summary>
 		/// 매개변수로 받은 플레이어의 퍼미션을 확인하고 op면 true,
 		/// 아니면 false를 반환하고 메시지를 보냅니다.
 		/// </summary>
-		/// <param name="sender">Instance of player</param>
+		/// <param name="player">플레이어의 인스턴스</param>
 		/// <returns></returns>
-		public bool CheckCurrentUserPermission(Player sender)
+		public bool CheckCurrentUserPermission(Player player)
 		{
-			if(IsOP(sender.Username))
+			if(IsOP(player.Username) || IsAdmin(player.Username))
 			{
 				return true;
 			}
 			else
 			{
-				sender.SendMessage($"{ChatColors.Red}[Server] 명령어를 사용할 권한이 없습니다 !");
+				player.SendMessage($"{ChatColors.Red}명령어를 사용할 권한이 없습니다 !");
 			}
 			return false;
 		}
