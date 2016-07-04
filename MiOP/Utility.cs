@@ -2,6 +2,9 @@
 
 namespace MiOP
 {
+	/// <summary>
+	/// MiOP에 대한 각종 유틸리티를 제공합니다.
+	/// </summary>
 	public class Utility
 	{
 		/// <summary>

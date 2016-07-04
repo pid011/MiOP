@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using log4net;
 using MiNET;
 using MiNET.Plugins;
@@ -10,20 +8,29 @@ using MiNET.Utils;
 
 namespace MiOP
 {
+	/// <summary>
+	/// MiOP 메인 클래스 입니다.
+	/// </summary>
 	[Plugin]
 	public class MiOP : Plugin
 	{
 		private static ILog Log = LogManager.GetLogger(typeof(MiOP));
 		private List<string> ops = new List<string>();
 		private Manager manager;
-		Dictionary<string, string> helpText = new Dictionary<string, string>
+
+		private Dictionary<string, string> helpText = new Dictionary<string, string>
 		{
 			{ "add", $"{ChatColors.Yellow}/op add [ name ] - OP 추가" },
 			{ "rm", $"{ChatColors.Yellow}/op rm [ name ] - op삭제" },
 			{ "list", $"{ChatColors.Yellow}/op list - op 전체 목록 조회" }
 		};
-		enum commands { add, rm, list }
 
+		private enum commands
+		{ add, rm, list }
+
+		/// <summary>
+		/// 시작시 실행될 함수.
+		/// </summary>
 		protected override void OnEnable()
 		{
 			Startup();
@@ -34,6 +41,11 @@ namespace MiOP
 		{
 			manager = new Manager();
 		}
+
+		/// <summary>
+		/// op commad.
+		/// </summary>
+		/// <param name="player"></param>
 		[Command]
 		public void op(Player player)
 		{
@@ -44,6 +56,11 @@ namespace MiOP
 			Utility.SendMsg(player, helpText["list"]);
 		}
 
+		/// <summary>
+		/// op command.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="args"></param>
 		[Command]
 		public void op(Player player, string args)
 		{
@@ -87,6 +104,13 @@ namespace MiOP
 				}
 			}
 		}
+
+		/// <summary>
+		/// op command.
+		/// </summary>
+		/// <param name="player"></param>
+		/// <param name="args1"></param>
+		/// <param name="args2"></param>
 		[Command]
 		public void op(Player player, string args1, string args2)
 		{
