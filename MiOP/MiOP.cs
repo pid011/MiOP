@@ -54,9 +54,9 @@ namespace MiOP
                 return;
             }
 
-            Utility.SendMsg(player, helpText["add"]);
-			Utility.SendMsg(player, helpText["rm"]);
-			Utility.SendMsg(player, helpText["list"]);
+            Utility.SendMsg(player, this.helpText["add"]);
+			Utility.SendMsg(player, this.helpText["rm"]);
+			Utility.SendMsg(player, this.helpText["list"]);
 		}
 
 		/// <summary>
@@ -102,9 +102,9 @@ namespace MiOP
 					}
 					else
 					{
-						Utility.SendMsg(player, helpText["add"]);
-						Utility.SendMsg(player, helpText["rm"]);
-						Utility.SendMsg(player, helpText["list"]);
+						Utility.SendMsg(player, this.helpText["add"]);
+						Utility.SendMsg(player, this.helpText["rm"]);
+						Utility.SendMsg(player, this.helpText["list"]);
 						break;
 					}
 				}
@@ -177,9 +177,9 @@ namespace MiOP
 			}
 			else
 			{
-				Utility.SendMsg(player, helpText["add"]);
-				Utility.SendMsg(player, helpText["rm"]);
-				Utility.SendMsg(player, helpText["list"]);
+				Utility.SendMsg(player, this.helpText["add"]);
+				Utility.SendMsg(player, this.helpText["rm"]);
+				Utility.SendMsg(player, this.helpText["list"]);
 			}
 		}
 
