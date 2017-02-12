@@ -25,7 +25,7 @@ namespace MiOP
 			{ "list", $"{ChatColors.Yellow}/op list - op 전체 목록 조회" }
 		};
 
-		private enum commands
+		private enum Commands
 		{ add, rm, list }
 
 		/// <summary>
@@ -39,7 +39,7 @@ namespace MiOP
 
 		private void Startup()
 		{
-			manager = new Manager();
+            this.manager = new Manager();
 		}
 
 		/// <summary>
@@ -47,11 +47,14 @@ namespace MiOP
 		/// </summary>
 		/// <param name="player"></param>
 		[Command]
-		public void op(Player player)
+		public void Op(Player player)
 		{
-			if(!manager.CheckCurrentUserPermission(player)) return;
+			if(!this.manager.CheckCurrentUserPermission(player))
+            {
+                return;
+            }
 
-			Utility.SendMsg(player, helpText["add"]);
+            Utility.SendMsg(player, helpText["add"]);
 			Utility.SendMsg(player, helpText["rm"]);
 			Utility.SendMsg(player, helpText["list"]);
 		}
@@ -62,13 +65,16 @@ namespace MiOP
 		/// <param name="player"></param>
 		/// <param name="args"></param>
 		[Command]
-		public void op(Player player, string args)
+		public void Op(Player player, string args)
 		{
-			if(!manager.CheckCurrentUserPermission(player)) return;
+			if(!this.manager.CheckCurrentUserPermission(player))
+            {
+                return;
+            }
 
-			if(args == "list")
+            if (args == "list")
 			{
-				List<string> msgs = MakeupList(manager.GetOpList());
+				List<string> msgs = MakeupList(this.manager.GetOpList());
 				foreach(var item in msgs)
 				{
 					Utility.SendMsg(player, item);
@@ -112,25 +118,28 @@ namespace MiOP
 		/// <param name="args1"></param>
 		/// <param name="args2"></param>
 		[Command]
-		public void op(Player player, string args1, string args2)
+		public void Op(Player player, string args1, string args2)
 		{
-			if(!manager.CheckCurrentUserPermission(player)) return;
+			if(!this.manager.CheckCurrentUserPermission(player))
+            {
+                return;
+            }
 
-			string msg;
+            string msg;
 			if(args1 == "add")
 			{
-				if(manager.Add(args2))
+				if(this.manager.Add(args2))
 				{
 					msg = $"{args2}님을 성공적으로 추가 하였습니다!";
 				}
 				else
 				{
 					msg = "추가에 실패하였습니다. ";
-					if(manager.IsOP(args2))
+					if(this.manager.IsOP(args2))
 					{
 						msg += $"{args2}님은 이미 op입니다.";
 					}
-					else if(manager.IsAdmin(args2))
+					else if(this.manager.IsAdmin(args2))
 					{
 						msg += $"{args2}님은 이미 admin입니다.";
 					}
@@ -143,19 +152,19 @@ namespace MiOP
 			}
 			else if(args1 == "rm")
 			{
-				if(manager.IsAdmin(args2))
+				if(this.manager.IsAdmin(args2))
 				{
 					Utility.SendMsg(player, $"admin은 삭제가 불가능 합니다.");
 					return;
 				}
-				if(manager.Remove(args2))
+				if(this.manager.Remove(args2))
 				{
 					msg = $"{args2}님을 성공적으로 삭제 하였습니다!";
 				}
 				else
 				{
 					msg = "삭제에 실패하였습니다. ";
-					if(!manager.IsOP(args2))
+					if(!this.manager.IsOP(args2))
 					{
 						msg += $"{args2}님은 op가 아닙니다.";
 					}
@@ -177,8 +186,8 @@ namespace MiOP
 		private List<string> MakeupList(List<string> list)
 		{
 			List<string> makeupText = new List<string>();
-			List<string> op = manager.GetOpList();
-			List<string> admin = manager.GetAdminList();
+			List<string> op = this.manager.GetOpList();
+			List<string> admin = this.manager.GetAdminList();
 
 			StringBuilder sb = new StringBuilder();
 
