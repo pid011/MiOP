@@ -46,7 +46,7 @@ namespace MiOP
 		/// op commad.
 		/// </summary>
 		/// <param name="player"></param>
-		[Command]
+		[Command(Description = "OP 관련 명령어입니다. OP 또는 Admin만 사용가능합니다.")]
 		public void Op(Player player)
 		{
 			if(!this.manager.CheckCurrentUserPermission(player))
