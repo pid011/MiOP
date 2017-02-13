@@ -9,15 +9,17 @@
     publish_nuget: true
   before_build:
   - cmd: nuget restore MiOP\MiOP.sln
-  after_test:
-  - cmd: nuget pack "MiOP\MiOP.nuspec" -Version %APPVEYOR_BUILD_VERSION%
+  after_build:
+  - cmd: >-
+    nuget pack "MiOP\MiOP.nuspec" -Version %APPVEYOR_BUILD_VERSION%
+
+    7z a MiOP.zip MiOP\bin\$(configuration)\MiOP.*
   artifacts:
   - path: '*.nupkg'
     name: NuGetPackage
     
   - path: 'MiOP\bin\$(configuration)\MiOP.*'
     name: Plugin
-    type: zip
 
   deploy:
   - provider: NuGet
