@@ -11,12 +11,12 @@
   - cmd: nuget restore MiOP\MiOP.sln
   after_build:
   - cmd: nuget pack "MiOP\MiOP.nuspec" -Version %APPVEYOR_BUILD_VERSION%
-  - cmd: 7z a MiOP.zip MiOP\bin\Release\MiOP.*
+  - cmd: 7z a MiOP.zip MiOP\bin\Release\MiOP.dll
   artifacts:
   - path: '*.nupkg'
     name: NuGetPackage
     
-  - path: 'MiOP\bin\$(configuration)\MiOP.*'
+  - path: 'MiOP\bin\Release\MiOP.zip'
     name: Plugin
 
   deploy:
