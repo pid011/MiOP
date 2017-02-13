@@ -29,11 +29,14 @@ namespace MiOP
 				File.Create(path);
 			}
 		}
-
-        /// <summary>
-        /// return Manager class instance.
-        /// </summary>
-        public static Manager API => new Manager();
+		
+		/// <summary>
+		/// return Manager class instance.
+		/// </summary>
+		public static Manager GetAPI()	
+		{
+			return new Manager();
+		}
 			
 		/// <summary>
 		/// op를 추가하고 성공여부를 반환합니다.
