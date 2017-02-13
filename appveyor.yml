@@ -2,6 +2,9 @@
   version: 1.20.{build}
   platform: Any CPU
   configuration: Release
+  branches:
+    only:
+      - release
   build:
     publish_nuget: true
   before_build:
@@ -12,11 +15,9 @@
   - path: '*.nupkg'
     name: NuGetPackage
     
-  - path: 'bin\$(configuration)\MiOP.dll'
+  - path: 'bin\$(configuration)\MiOP.*'
     name: Plugin
-    
-  - path: 'bin\$(configuration)\MiOP.xml'
-    name: XMLDocument
+
   deploy:
   - provider: NuGet
     api_key:
