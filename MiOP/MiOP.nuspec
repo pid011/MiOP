@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package >
+  <metadata>
+    <id>miop</id>
+    <version>$version$</version>
+    <title>MiOP</title>
+    <authors>Sepi</authors>
+    <licenseUrl>https://github.com/pid011/MiOP/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/pid011/MiOP</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>You can use OP in MiNET. (Korean support)</description>
+    <releaseNotes>You can see the https://github.com/pid011/MiOP/commits/release</releaseNotes>
+    <copyright>Copyright Sepi 2017</copyright>
+    <tags>MiNET</tags>
+    <dependencies>
+      <dependency id="MiNET" version="1.0.1322" />
+    </dependencies>
+  </metadata>
+
+  <files>
+    <file src="bin\Release\MiOP.*" target="lib\net46" />
+  </files>
+</package>

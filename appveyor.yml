@@ -1,0 +1,17 @@
+version: 1.0.{build}
+branches:
+  only:
+  - release
+configuration: Release
+platform: Any CPU
+before_build:
+- cmd: nuget restore MiOP\MiOP.sln
+build:
+  publish_nuget: true
+  publish_nuget_symbols: true
+  include_nuget_references: true
+  verbosity: minimal
+after_test:
+- cmd: nuget pack "MiOP\MiOP\MiOP.nuspec" -Version %APPVEYOR_BUILD_VERSION%
+artifacts:
+- path: '**\*.nupkg'
