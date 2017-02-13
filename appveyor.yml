@@ -17,6 +17,7 @@
     
   - path: 'MiOP\bin\$(configuration)\MiOP.*'
     name: Plugin
+    type: zip
 
   deploy:
   - provider: NuGet
