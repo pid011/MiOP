@@ -33,7 +33,7 @@ namespace MiOP
 		/// <summary>
 		/// return Manager class instance.
 		/// </summary>
-		public static Manager GetAPI()	
+		public static Manager GetAPI()
 		{
 			return new Manager();
 		}
