@@ -16,7 +16,7 @@
   - path: '*.nupkg'
     name: NuGetPackage
     
-  - path: 'MiOP\bin\Release\MiOP.zip'
+  - path: '**/MiOP.zip'
     name: Plugin
 
   deploy:
