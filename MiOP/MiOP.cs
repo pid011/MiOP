@@ -12,7 +12,7 @@ namespace MiOP
 	/// MiOP 메인 클래스 입니다.
 	/// </summary>
 	[Plugin(Author = "Sepi", Description = "MiNET에서 OP기능을 사용할 수 있습니다.", 
-        PluginName = "MiOP", PluginVersion = "v1.5")]
+        PluginName = "MiOP", PluginVersion = "v1.21")]
 	public class MiOP : Plugin
 	{
 		private static ILog Log = LogManager.GetLogger(typeof(MiOP));
