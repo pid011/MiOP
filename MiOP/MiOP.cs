@@ -11,13 +11,12 @@ namespace MiOP
 	/// <summary>
 	/// MiOP 메인 클래스 입니다.
 	/// </summary>
-	[Plugin(Author = "Sepi", Description = "MiNET에서 OP기능을 사용할 수 있습니다.", 
+	[Plugin(Author = "Sepi", Description = "MiNET에서 권한기능을 사용할 수 있습니다.", 
         PluginName = "MiOP", PluginVersion = "v1.21")]
 	public class MiOP : Plugin
 	{
 		private static ILog Log = LogManager.GetLogger(typeof(MiOP));
 		private List<string> ops = new List<string>();
-		private Manager manager;
 
 		private Dictionary<string, string> helpText = new Dictionary<string, string>
 		{
@@ -29,28 +28,23 @@ namespace MiOP
 		private enum Commands
 		{ add, rm, list }
 
-		/// <summary>
-		/// 시작시 실행될 함수.
-		/// </summary>
-		protected override void OnEnable()
-		{
-			Startup();
-			base.OnEnable();
-		}
-
-		private void Startup()
-		{
-            this.manager = new Manager();
-		}
+        /// <summary>
+        /// 시작시 실행될 함수.
+        /// </summary>
+        protected override void OnEnable()
+        {
+            PermissionManager.Manager.TryCreateFile();
+            base.OnEnable();
+        }
 
 		/// <summary>
 		/// op commad.
 		/// </summary>
 		/// <param name="player"></param>
-		[Command(Description = "OP 관련 명령어입니다. OP 또는 Admin만 사용가능합니다.")]
+		[Command(Description = "권한 관련 명령어입니다. OP 또는 Admin만 사용가능합니다.")]
 		public void Op(Player player)
 		{
-			if(!this.manager.CheckCurrentUserPermission(player))
+			if(!PermissionManager.Manager.CheckCurrentUserPermission(player))
             {
                 return;
             }
@@ -68,14 +62,14 @@ namespace MiOP
 		[Command]
 		public void Op(Player player, string args)
 		{
-			if(!this.manager.CheckCurrentUserPermission(player))
+			if(!PermissionManager.Manager.CheckCurrentUserPermission(player))
             {
                 return;
             }
 
             if (args == "list")
 			{
-				List<string> msgs = MakeupList(this.manager.GetOpList());
+				List<string> msgs = MakeupList();
 				foreach(var item in msgs)
 				{
 					Utility.SendMsg(player, item);
@@ -122,7 +116,7 @@ namespace MiOP
 		[Command]
 		public void Op(Player player, string args1, string args2)
 		{
-			if(!this.manager.CheckCurrentUserPermission(player))
+			if(!PermissionManager.Manager.CheckCurrentUserPermission(player))
             {
                 return;
             }
@@ -130,18 +124,18 @@ namespace MiOP
             string msg;
 			if(args1 == "add")
 			{
-				if(this.manager.Add(args2))
+				if(PermissionManager.Manager.Add(args2))
 				{
 					msg = $"{args2}님을 성공적으로 추가 하였습니다!";
 				}
 				else
 				{
 					msg = "추가에 실패하였습니다. ";
-					if(this.manager.IsOP(args2))
+					if(PermissionManager.Manager.IsOP(args2))
 					{
 						msg += $"{args2}님은 이미 op입니다.";
 					}
-					else if(this.manager.IsAdmin(args2))
+					else if(PermissionManager.Manager.IsAdmin(args2))
 					{
 						msg += $"{args2}님은 이미 admin입니다.";
 					}
@@ -154,19 +148,19 @@ namespace MiOP
 			}
 			else if(args1 == "rm")
 			{
-				if(this.manager.IsAdmin(args2))
+				if(PermissionManager.Manager.IsAdmin(args2))
 				{
 					Utility.SendMsg(player, $"admin은 삭제가 불가능 합니다.");
 					return;
 				}
-				if(this.manager.Remove(args2))
+				if(PermissionManager.Manager.Remove(args2))
 				{
 					msg = $"{args2}님을 성공적으로 삭제 하였습니다!";
 				}
 				else
 				{
 					msg = "삭제에 실패하였습니다. ";
-					if(!this.manager.IsOP(args2))
+					if(!PermissionManager.Manager.IsOP(args2))
 					{
 						msg += $"{args2}님은 op가 아닙니다.";
 					}
@@ -185,11 +179,11 @@ namespace MiOP
 			}
 		}
 
-		private List<string> MakeupList(List<string> list)
+		private List<string> MakeupList()
 		{
 			List<string> makeupText = new List<string>();
-			List<string> op = this.manager.GetOpList();
-			List<string> admin = this.manager.GetAdminList();
+			List<string> op = PermissionManager.Manager.GetOpList();
+			List<string> admin = PermissionManager.Manager.GetAdminList();
 
 			StringBuilder sb = new StringBuilder();
 

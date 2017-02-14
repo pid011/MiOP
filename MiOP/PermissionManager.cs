@@ -12,31 +12,36 @@ namespace MiOP
 	/// <summary>
 	/// 여러가지 op기능을 제공합니다.
 	/// </summary>
-	public class Manager
+	public class PermissionManager
 	{
 		private ILog Log = LogManager.GetLogger("op Manager");
 		private const string fileName = "ops.txt";
 		private static string assembly = Assembly.GetExecutingAssembly().GetName().CodeBase;
 		private static string path = Path.Combine(new Uri(Path.GetDirectoryName(assembly)).LocalPath, fileName);
 
-		/// <summary>
-		/// op 인스턴스를 초기화합니다.
-		/// </summary>
-		public Manager()
+        /// <summary>
+        /// MiOP의 API기능을 사용할 수 있습니다.
+        /// </summary>
+        public static PermissionManager Manager { get; } = new PermissionManager();
+
+        /// <summary>
+        /// op 인스턴스를 초기화합니다.
+        /// </summary>
+        public PermissionManager()
 		{
-			if(!File.Exists(path))
-			{
-				File.Create(path);
-			}
+            TryCreateFile();
 		}
-		
-		/// <summary>
-		/// return Manager class instance.
-		/// </summary>
-		public static Manager GetAPI()
-		{
-			return new Manager();
-		}
+
+        /// <summary>
+        /// OP 파일이 없으면 생성합니다.
+        /// </summary>
+        public void TryCreateFile()
+        {
+            if (!File.Exists(path))
+            {
+                File.Create(path);
+            }
+        }
 			
 		/// <summary>
 		/// op를 추가하고 성공여부를 반환합니다.
