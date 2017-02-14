@@ -27,9 +27,8 @@ namespace MiOP
         /// <summary>
         /// op 인스턴스를 초기화합니다.
         /// </summary>
-        public PermissionManager()
+        private PermissionManager()
 		{
-            TryCreateFile();
 		}
 
         /// <summary>
