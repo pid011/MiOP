@@ -11,10 +11,10 @@ using MiOP.Box.Commands;
 namespace MiOP.Box
 {
     /// <summary>
-    /// MiOP 메인 클래스 입니다.
+    /// MiOP 메인 클래스.
     /// </summary>
     [Plugin(Author = "Sepi", Description = "MiNET에서 권한기능을 사용할 수 있습니다.",
-        PluginName = "MiOP", PluginVersion = "v1.3")]
+        PluginName = "MiOP", PluginVersion = "v2.0")]
     public class MiOP : Plugin
     {
         /// <summary>

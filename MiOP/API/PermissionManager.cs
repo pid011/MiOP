@@ -12,7 +12,7 @@ using MiOP.Box;
 namespace MiOP.API
 {
     /// <summary>
-    /// 여러가지 op기능을 제공합니다.
+    /// 여러가지 권한기능을 제공합니다.
     /// </summary>
     public static class PermissionManager
     {
@@ -30,7 +30,7 @@ namespace MiOP.API
         */
 
         /// <summary>
-        /// op 목록을 가져옵니다.
+        /// OP 목록을 가져옵니다.
         /// </summary>
         /// <returns></returns>
         public static List<string> OPList
@@ -79,7 +79,7 @@ namespace MiOP.API
         }
 
         /// <summary>
-        /// admin목록을 가져옵니다.
+        /// Admin목록을 가져옵니다.
         /// </summary>
         /// <returns></returns>
         public static List<string> AdminList
@@ -111,9 +111,9 @@ namespace MiOP.API
         }
 
         /// <summary>
-        /// op를 추가하고 성공여부를 반환합니다.
+        /// OP를 추가하고 성공여부를 반환합니다.
         /// </summary>
-        /// <param name="name">Player's name</param>
+        /// <param name="name">타겟 플레이어의 이름</param>
         public static bool Add(string name)
         {
             if (IsOP(name) || IsAdmin(name))
@@ -147,9 +147,9 @@ namespace MiOP.API
         }
 
         /// <summary>
-        /// op를 제거하고 성공여부를 반환합니다.
+        /// OP를 제거하고 성공여부를 반환합니다.
         /// </summary>
-        /// <param name="name">Player's name</param>
+        /// <param name="name">타겟 플레이어의 이름</param>
         /// <returns></returns>
         public static bool Remove(string name)
         {
@@ -187,9 +187,9 @@ namespace MiOP.API
         }
 
         /// <summary>
-        /// 해당 플레이어가 op인지 확인합니다.
+        /// 해당 플레이어가 OP인지 확인합니다.
         /// </summary>
-        /// <param name="name">플레이어의 이름</param>
+        /// <param name="name">타겟 플레이어의 이름</param>
         /// <returns></returns>
         public static bool IsOP(string name)
         {
@@ -197,7 +197,7 @@ namespace MiOP.API
         }
 
         /// <summary>
-        /// 해당 플레이어가 admin인지 확인합니다.
+        /// 해당 플레이어가 Admin인지 확인합니다.
         /// </summary>
         /// <param name="name">플레이어의 이름</param>
         /// <returns></returns>
@@ -207,10 +207,10 @@ namespace MiOP.API
         }
 
         /// <summary>
-        /// 매개변수로 받은 플레이어의 퍼미션을 확인하고 op면 true,
+        /// 매개변수로 받은 플레이어의 권한을 확인하고 OP면 true,
         /// 아니면 false를 반환하고 메시지를 보냅니다.
         /// </summary>
-        /// <param name="player">플레이어의 인스턴스</param>
+        /// <param name="player">타겟 플레이어</param>
         /// <returns></returns>
         public static bool CheckCurrentUserPermission(Player player)
         {
