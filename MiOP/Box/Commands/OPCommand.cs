@@ -106,7 +106,6 @@ namespace MiOP.Box.Commands
         /// <param name="args1"></param>
         /// <param name="args2"></param>
         [Command]
-        [Authorize(Permission = (int) CommandPermission.Admin)]
         public void Op(Player player, string args1, string args2)
         {
             if (!PermissionManager.CheckCurrentUserPermission(player))
