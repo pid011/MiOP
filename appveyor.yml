@@ -22,7 +22,7 @@
   deploy:
   - provider: NuGet
     api_key:
-      secure: IVtCkzUyoWfB41SzwMVeaYMMXwCLHjvzY7k6QW7K1GGpo8cwlN280QHWtD+qQFvp
+      secure: sky4reJa4/VtLojp12Mjjlzouz2Fq4lQtMK7fFNGnVQnhKKyhS1FcxHOjM81jV0i
     artifact: NuGetPackage
     on:
       platform: Any CPU
