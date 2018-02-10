@@ -1,11 +1,9 @@
 ﻿using MiNET;
-using MiNET.Net;
 using MiNET.Plugins;
 using MiNET.Plugins.Attributes;
 using MiNET.Utils;
 using MiOP.API;
 using System.Collections.Generic;
-using System.Text;
 
 namespace MiOP.Box.Commands
 {

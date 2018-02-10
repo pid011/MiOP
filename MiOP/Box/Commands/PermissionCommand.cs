@@ -1,5 +1,4 @@
 ﻿using MiNET;
-using MiNET.Net;
 using MiNET.Plugins;
 using MiNET.Plugins.Attributes;
 using MiNET.Utils;
