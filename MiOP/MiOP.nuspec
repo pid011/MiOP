@@ -8,12 +8,12 @@
     <licenseUrl>https://github.com/pid011/MiOP/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/pid011/MiOP</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>You can use OP in MiNET. (Korean support)</description>
+    <description>MiNET에서 권한 기능을 사용할 수 있습니다. (Only Korean)</description>
     <releaseNotes>You can see the https://github.com/pid011/MiOP/commits/release</releaseNotes>
-    <copyright>Copyright Sepi 2017</copyright>
+    <copyright>Copyright Sepi 2018</copyright>
     <tags>MiNET</tags>
     <dependencies>
-      <dependency id="MiNET" version="1.0.1322" />
+      <dependency id="MiNET" version="1.0.1740" />
     </dependencies>
   </metadata>
 
