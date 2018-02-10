@@ -7,7 +7,6 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Threading;
-using MiOP.Box;
 
 namespace MiOP.API
 {
@@ -170,7 +169,7 @@ namespace MiOP.API
             try
             {
                 Monitor.Enter(LockOpsTxt, ref lockTaken);
-                using(StreamWriter stream = new StreamWriter(OpsPath, false, Encoding.UTF8))
+                using (StreamWriter stream = new StreamWriter(OpsPath, false, Encoding.UTF8))
                 {
                     stream.Write(sb.ToString());
                 }
