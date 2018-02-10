@@ -1,22 +1,19 @@
-﻿using log4net;
-using MiNET;
+﻿using MiNET;
+using MiNET.Net;
 using MiNET.Plugins;
 using MiNET.Plugins.Attributes;
 using MiNET.Utils;
+using MiOP.API;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MiOP
+namespace MiOP.Box.Commands
 {
-    /// <summary>
-    /// MiOP 메인 클래스 입니다.
-    /// </summary>
-    [Plugin(Author = "Sepi", Description = "MiNET에서 권한기능을 사용할 수 있습니다.",
-        PluginName = "MiOP", PluginVersion = "v1.21")]
-    public class MiOP : Plugin
+    public class OPCommand
     {
-        private static ILog Log = LogManager.GetLogger(typeof(MiOP));
         private List<string> ops = new List<string>();
+
+        private readonly PluginContext context;
 
         private Dictionary<string, string> helpText = new Dictionary<string, string>
         {
@@ -28,13 +25,9 @@ namespace MiOP
         private enum Commands
         { add, rm, list }
 
-        /// <summary>
-        /// 시작시 실행될 함수.
-        /// </summary>
-        protected override void OnEnable()
+        public OPCommand(PluginContext context)
         {
-            PermissionManager.Manager.TryCreateFile();
-            base.OnEnable();
+            this.context = context;
         }
 
         /// <summary>
@@ -42,16 +35,16 @@ namespace MiOP
         /// </summary>
         /// <param name="player"></param>
         [Command(Description = "권한 관련 명령어입니다. OP 또는 Admin만 사용가능합니다.")]
-        public void Op(Player player)
+        public void Permission(Player player)
         {
-            if (!PermissionManager.Manager.CheckCurrentUserPermission(player))
+            if (!PermissionManager.CheckCurrentUserPermission(player))
             {
                 return;
             }
 
-            Utility.SendMsg(player, this.helpText["add"]);
-            Utility.SendMsg(player, this.helpText["rm"]);
-            Utility.SendMsg(player, this.helpText["list"]);
+            Utility.SendMsg(player, helpText["add"]);
+            Utility.SendMsg(player, helpText["rm"]);
+            Utility.SendMsg(player, helpText["list"]);
         }
 
         /// <summary>
@@ -62,7 +55,7 @@ namespace MiOP
         [Command]
         public void Op(Player player, string args)
         {
-            if (!PermissionManager.Manager.CheckCurrentUserPermission(player))
+            if (!PermissionManager.CheckCurrentUserPermission(player))
             {
                 return;
             }
@@ -97,9 +90,9 @@ namespace MiOP
                     }
                     else
                     {
-                        Utility.SendMsg(player, this.helpText["add"]);
-                        Utility.SendMsg(player, this.helpText["rm"]);
-                        Utility.SendMsg(player, this.helpText["list"]);
+                        Utility.SendMsg(player, helpText["add"]);
+                        Utility.SendMsg(player, helpText["rm"]);
+                        Utility.SendMsg(player, helpText["list"]);
                         break;
                     }
                 }
@@ -113,9 +106,10 @@ namespace MiOP
         /// <param name="args1"></param>
         /// <param name="args2"></param>
         [Command]
+        [Authorize(Permission = (int) CommandPermission.Admin)]
         public void Op(Player player, string args1, string args2)
         {
-            if (!PermissionManager.Manager.CheckCurrentUserPermission(player))
+            if (!PermissionManager.CheckCurrentUserPermission(player))
             {
                 return;
             }
@@ -123,18 +117,18 @@ namespace MiOP
             string msg;
             if (args1 == "add")
             {
-                if (PermissionManager.Manager.Add(args2))
+                if (PermissionManager.Add(args2))
                 {
                     msg = $"{args2}님을 성공적으로 추가 하였습니다!";
                 }
                 else
                 {
                     msg = "추가에 실패하였습니다. ";
-                    if (PermissionManager.Manager.IsOP(args2))
+                    if (PermissionManager.IsOP(args2))
                     {
                         msg += $"{args2}님은 이미 op입니다.";
                     }
-                    else if (PermissionManager.Manager.IsAdmin(args2))
+                    else if (PermissionManager.IsAdmin(args2))
                     {
                         msg += $"{args2}님은 이미 admin입니다.";
                     }
@@ -147,19 +141,19 @@ namespace MiOP
             }
             else if (args1 == "rm")
             {
-                if (PermissionManager.Manager.IsAdmin(args2))
+                if (PermissionManager.IsAdmin(args2))
                 {
                     Utility.SendMsg(player, $"admin은 삭제가 불가능 합니다.");
                     return;
                 }
-                if (PermissionManager.Manager.Remove(args2))
+                if (PermissionManager.Remove(args2))
                 {
                     msg = $"{args2}님을 성공적으로 삭제 하였습니다!";
                 }
                 else
                 {
                     msg = "삭제에 실패하였습니다. ";
-                    if (!PermissionManager.Manager.IsOP(args2))
+                    if (!PermissionManager.IsOP(args2))
                     {
                         msg += $"{args2}님은 op가 아닙니다.";
                     }
@@ -172,17 +166,17 @@ namespace MiOP
             }
             else
             {
-                Utility.SendMsg(player, this.helpText["add"]);
-                Utility.SendMsg(player, this.helpText["rm"]);
-                Utility.SendMsg(player, this.helpText["list"]);
+                Utility.SendMsg(player, helpText["add"]);
+                Utility.SendMsg(player, helpText["rm"]);
+                Utility.SendMsg(player, helpText["list"]);
             }
         }
 
         private List<string> MakeupList()
         {
             List<string> makeupText = new List<string>();
-            List<string> op = PermissionManager.Manager.GetOpList();
-            List<string> admin = PermissionManager.Manager.GetAdminList();
+            List<string> op = PermissionManager.OPList;
+            List<string> admin = PermissionManager.AdminList;
 
             StringBuilder sb = new StringBuilder();
 
