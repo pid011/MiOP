@@ -42,9 +42,9 @@ namespace MiOP.Box.Commands
                 return;
             }
 
-            Utility.SendMsg(player, helpText["add"]);
-            Utility.SendMsg(player, helpText["rm"]);
-            Utility.SendMsg(player, helpText["list"]);
+            player.SendMessage(helpText["add"]);
+            player.SendMessage(helpText["rm"]);
+            player.SendMessage(helpText["list"]);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace MiOP.Box.Commands
                 List<string> msgs = MakeupList();
                 foreach (var item in msgs)
                 {
-                    Utility.SendMsg(player, item);
+                    player.SendMessage(item);
                 }
             }
             else
@@ -75,24 +75,24 @@ namespace MiOP.Box.Commands
                 {
                     if ("add".Contains(t.ToString()))
                     {
-                        Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["add"]}");
+                        player.SendMessage($"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["add"]}");
                         break;
                     }
                     else if ("rm".Contains(t.ToString()))
                     {
-                        Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["rm"]}");
+                        player.SendMessage($"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["rm"]}");
                         break;
                     }
                     else if ("list".Contains(t.ToString()))
                     {
-                        Utility.SendMsg(player, $"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["list"]}");
+                        player.SendMessage($"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["list"]}");
                         break;
                     }
                     else
                     {
-                        Utility.SendMsg(player, helpText["add"]);
-                        Utility.SendMsg(player, helpText["rm"]);
-                        Utility.SendMsg(player, helpText["list"]);
+                        player.SendMessage(helpText["add"]);
+                        player.SendMessage(helpText["rm"]);
+                        player.SendMessage(helpText["list"]);
                         break;
                     }
                 }
@@ -137,13 +137,13 @@ namespace MiOP.Box.Commands
                         msg += $"내부적 오류입니다.";
                     }
                 }
-                Utility.SendMsg(player, msg);
+                player.SendMessage(msg);
             }
             else if (args1 == "rm")
             {
                 if (PermissionManager.IsAdmin(args2))
                 {
-                    Utility.SendMsg(player, $"admin은 삭제가 불가능 합니다.");
+                    player.SendMessage($"admin은 삭제가 불가능 합니다.");
                     return;
                 }
                 if (PermissionManager.Remove(args2))
@@ -162,13 +162,13 @@ namespace MiOP.Box.Commands
                         msg += $"내부적 오류입니다.";
                     }
                 }
-                Utility.SendMsg(player, msg);
+                player.SendMessage(msg);
             }
             else
             {
-                Utility.SendMsg(player, helpText["add"]);
-                Utility.SendMsg(player, helpText["rm"]);
-                Utility.SendMsg(player, helpText["list"]);
+                player.SendMessage(helpText["add"]);
+                player.SendMessage(helpText["rm"]);
+                player.SendMessage(helpText["list"]);
             }
         }
 

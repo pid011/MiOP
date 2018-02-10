@@ -30,7 +30,7 @@ namespace MiOP.Box
 
         private void LoadCommands()
         {
-            Context.PluginManager.LoadCommands(new OPCommand());
+            Context.PluginManager.LoadCommands(new OPCommand(Context));
         }
     }
 }
