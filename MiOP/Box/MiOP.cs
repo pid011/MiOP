@@ -9,7 +9,7 @@ namespace MiOP.Box
     /// MiOP 메인 클래스.
     /// </summary>
     [Plugin(Author = "Sepi", Description = "MiNET에서 권한기능을 사용할 수 있습니다.",
-        PluginName = "MiOP", PluginVersion = "v2.0")]
+        PluginName = "MiOP", PluginVersion = "v2")]
     public class MiOP : Plugin
     {
         /// <summary>
