@@ -18,8 +18,7 @@ namespace MiOP.Box.Commands
         private Dictionary<string, string> helpText = new Dictionary<string, string>
         {
             { "add", $"{ChatColors.Yellow}/op add [ name ] - OP 추가" },
-            { "rm", $"{ChatColors.Yellow}/op rm [ name ] - op삭제" },
-            { "list", $"{ChatColors.Yellow}/op list - op 전체 목록 조회" }
+            { "rm", $"{ChatColors.Yellow}/op rm [ name ] - op삭제" }
         };
 
         private enum Commands
@@ -34,8 +33,8 @@ namespace MiOP.Box.Commands
         /// Permission 명령어
         /// </summary>
         /// <param name="player"></param>
-        [Command(Description = "권한 관련 명령어입니다. OP 또는 Admin만 사용가능합니다.")]
-        public void Permission(Player player)
+        [Command(Description = "OP 관련 명령어입니다. OP 또는 Admin만 사용가능합니다.")]
+        public void OP(Player player)
         {
             if (!PermissionManager.CheckCurrentUserPermission(player))
             {
@@ -44,7 +43,6 @@ namespace MiOP.Box.Commands
 
             player.SendMessage(helpText["add"]);
             player.SendMessage(helpText["rm"]);
-            player.SendMessage(helpText["list"]);
         }
 
         /// <summary>
@@ -53,48 +51,31 @@ namespace MiOP.Box.Commands
         /// <param name="player"></param>
         /// <param name="args"></param>
         [Command]
-        public void Permission(Player player, string args)
+        public void OP(Player player, string args)
         {
             if (!PermissionManager.CheckCurrentUserPermission(player))
             {
                 return;
             }
 
-            if (args == "list")
+            char[] texts = args.ToCharArray();
+            foreach (var t in texts)
             {
-                List<string> msgs = MakeupList();
-                foreach (var item in msgs)
+                if ("add".Contains(t.ToString()))
                 {
-                    player.SendMessage(item);
+                    player.SendMessage($"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["add"]}");
+                    break;
                 }
-            }
-            else
-            {
-                char[] texts = args.ToCharArray();
-                foreach (var t in texts)
+                else if ("rm".Contains(t.ToString()))
                 {
-                    if ("add".Contains(t.ToString()))
-                    {
-                        player.SendMessage($"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["add"]}");
-                        break;
-                    }
-                    else if ("rm".Contains(t.ToString()))
-                    {
-                        player.SendMessage($"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["rm"]}");
-                        break;
-                    }
-                    else if ("list".Contains(t.ToString()))
-                    {
-                        player.SendMessage($"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["list"]}");
-                        break;
-                    }
-                    else
-                    {
-                        player.SendMessage(helpText["add"]);
-                        player.SendMessage(helpText["rm"]);
-                        player.SendMessage(helpText["list"]);
-                        break;
-                    }
+                    player.SendMessage($"이 명령어를 찾나요? -> {ChatColors.Gold}{helpText["rm"]}");
+                    break;
+                }
+                else
+                {
+                    player.SendMessage(helpText["add"]);
+                    player.SendMessage(helpText["rm"]);
+                    break;
                 }
             }
         }
@@ -106,7 +87,7 @@ namespace MiOP.Box.Commands
         /// <param name="args1"></param>
         /// <param name="args2"></param>
         [Command]
-        public void Permission(Player player, string args1, string args2)
+        public void OP(Player player, string args1, string args2)
         {
             if (!PermissionManager.CheckCurrentUserPermission(player))
             {
@@ -167,48 +148,7 @@ namespace MiOP.Box.Commands
             {
                 player.SendMessage(helpText["add"]);
                 player.SendMessage(helpText["rm"]);
-                player.SendMessage(helpText["list"]);
             }
-        }
-
-        private List<string> MakeupList()
-        {
-            List<string> makeupText = new List<string>();
-            List<string> op = PermissionManager.OPList;
-            List<string> admin = PermissionManager.AdminList;
-
-            StringBuilder sb = new StringBuilder();
-
-            makeupText.Add("=== LIST ===");
-            makeupText.Add($"{ChatColors.Red}RED{ChatColors.White} = admin, {ChatColors.Green}GREEN{ChatColors.White} = op");
-            sb.Append(ChatColors.Gold);
-            int i = 1;
-            foreach (var item in admin)
-            {
-                sb.Append($"[{ChatColors.Red}{item}{ChatColors.Gold}] ");
-                if (i % 5 == 0)
-                {
-                    makeupText.Add(sb.ToString());
-                    sb.Clear();
-                    sb.Append(ChatColors.Gold);
-                }
-                i++;
-            }
-            foreach (var item in op)
-            {
-                sb.Append($"[{ChatColors.Green}{item}{ChatColors.Gold}] ");
-                if (i % 5 == 0)
-                {
-                    makeupText.Add(sb.ToString());
-                    sb.Clear();
-                    sb.Append(ChatColors.Gold);
-                }
-                i++;
-            }
-            makeupText.Add(sb.ToString());
-            makeupText.Add($"총 {op.Count + admin.Count}명의 admin과 op가 있습니다.");
-
-            return makeupText;
         }
     }
 }

@@ -80,6 +80,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Box\Commands\OPCommand.cs" />
+    <Compile Include="Box\Commands\PermissionCommand.cs" />
     <Compile Include="Box\MiOP.cs" />
     <Compile Include="API\PermissionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
