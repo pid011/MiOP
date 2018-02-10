@@ -31,7 +31,7 @@ namespace MiOP.Box.Commands
         }
 
         /// <summary>
-        /// op commad.
+        /// Permission 명령어
         /// </summary>
         /// <param name="player"></param>
         [Command(Description = "권한 관련 명령어입니다. OP 또는 Admin만 사용가능합니다.")]
@@ -48,12 +48,12 @@ namespace MiOP.Box.Commands
         }
 
         /// <summary>
-        /// op command.
+        /// Permission 명령어
         /// </summary>
         /// <param name="player"></param>
         /// <param name="args"></param>
         [Command]
-        public void Op(Player player, string args)
+        public void Permission(Player player, string args)
         {
             if (!PermissionManager.CheckCurrentUserPermission(player))
             {
@@ -100,13 +100,13 @@ namespace MiOP.Box.Commands
         }
 
         /// <summary>
-        /// op command.
+        /// Permission 명령어
         /// </summary>
         /// <param name="player"></param>
         /// <param name="args1"></param>
         /// <param name="args2"></param>
         [Command]
-        public void Op(Player player, string args1, string args2)
+        public void Permission(Player player, string args1, string args2)
         {
             if (!PermissionManager.CheckCurrentUserPermission(player))
             {
