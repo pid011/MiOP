@@ -21,12 +21,6 @@ namespace MiOP.API
         private static string OpsPath = Path.Combine(new Uri(Path.GetDirectoryName(assembly)).LocalPath, fileName);
 
         private static object LockOpsTxt = new object();
-        /*
-        /// <summary>
-        /// MiOP의 API기능을 사용할 수 있습니다.
-        /// </summary>
-        public static PermissionManager Manager { get; } = new PermissionManager();
-        */
 
         /// <summary>
         /// OP 목록을 가져옵니다.
@@ -37,11 +31,16 @@ namespace MiOP.API
             get
             {
                 List<string> list = new List<string>();
-                TryCreateOpsTxt();
+
+                if (!TryCreateOpsTxt())
+                {
+                    return list;
+                }
+
                 bool lockTaken = false;
+                Monitor.Enter(LockOpsTxt, ref lockTaken);
                 try
                 {
-                    Monitor.Enter(LockOpsTxt, ref lockTaken);
                     using (StreamReader stream = new StreamReader(OpsPath, Encoding.UTF8))
                     {
                         int counter = 0;
@@ -55,7 +54,7 @@ namespace MiOP.API
                 }
                 catch (Exception e)
                 {
-                    throw e;
+                    Log.Warn(e.Message, e);
                 }
                 finally
                 {
@@ -69,12 +68,31 @@ namespace MiOP.API
             }
         }
 
-        internal static void TryCreateOpsTxt()
+        internal static bool TryCreateOpsTxt()
         {
-            if (!File.Exists(OpsPath))
+            bool lockTaken = false;
+            Monitor.Enter(LockOpsTxt, ref lockTaken);
+            try
             {
-                File.Create(OpsPath);
+                if (!File.Exists(OpsPath))
+                {
+                    File.Create(OpsPath);
+                }
             }
+            catch (Exception e)
+            {
+                Log.Warn(e.Message, e);
+                return false;
+            }
+            finally
+            {
+                if (lockTaken)
+                {
+                    Monitor.Exit(LockOpsTxt);
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -87,7 +105,8 @@ namespace MiOP.API
             {
                 List<string> list = new List<string>();
                 string txt = Config.GetProperty("admins", string.Empty);
-                if (txt == string.Empty)
+
+                if (string.IsNullOrWhiteSpace(txt))
                 {
                     return list;
                 }
@@ -115,33 +134,34 @@ namespace MiOP.API
         /// <param name="name">타겟 플레이어의 이름</param>
         public static bool Add(string name)
         {
+            // OP거나 Admin이면 추가 안됨.
             if (IsOP(name) || IsAdmin(name))
             {
                 return false;
             }
-            else
+
+            bool lockTaken = false;
+            Monitor.Enter(LockOpsTxt, ref lockTaken);
+            try
             {
-                bool lockTaken = false;
-                try
+                using (StreamWriter stream = new StreamWriter(OpsPath, true, Encoding.UTF8))
                 {
-                    Monitor.Enter(LockOpsTxt, ref lockTaken);
-                    using (StreamWriter stream = new StreamWriter(OpsPath, true, Encoding.UTF8))
-                    {
-                        stream.WriteLine(name);
-                    }
-                }
-                catch (Exception e)
-                {
-                    throw e;
-                }
-                finally
-                {
-                    if (lockTaken)
-                    {
-                        Monitor.Exit(LockOpsTxt);
-                    }
+                    stream.WriteLine(name);
                 }
             }
+            catch (Exception e)
+            {
+                Log.Warn(e.Message, e);
+                return false;
+            }
+            finally
+            {
+                if (lockTaken)
+                {
+                    Monitor.Exit(LockOpsTxt);
+                }
+            }
+            
             return true;
         }
 
@@ -152,10 +172,12 @@ namespace MiOP.API
         /// <returns></returns>
         public static bool Remove(string name)
         {
+            // OP가 아니므로 삭제 불가
             if (!IsOP(name))
             {
                 return false;
             }
+
             List<string> list = OPList;
             list.RemoveAll(x => x == name ? true : false);
 
@@ -166,9 +188,9 @@ namespace MiOP.API
             }
 
             bool lockTaken = false;
+            Monitor.Enter(LockOpsTxt, ref lockTaken);
             try
             {
-                Monitor.Enter(LockOpsTxt, ref lockTaken);
                 using (StreamWriter stream = new StreamWriter(OpsPath, false, Encoding.UTF8))
                 {
                     stream.Write(sb.ToString());
@@ -176,7 +198,8 @@ namespace MiOP.API
             }
             catch (Exception e)
             {
-                throw e;
+                Log.Warn(e.Message, e);
+                return false;
             }
             finally
             {
